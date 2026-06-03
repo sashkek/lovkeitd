@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pupok</title>
+    
+    <!-- === РЕДАКТИРУЙ ЗДЕСЬ: ПОДКЛЮЧИ ШРИФТЫ ЕСЛИ НУЖНО === -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           БАЗОВЫЕ СТИЛИ И ПЕРЕМЕННЫЕ
+           ========================================== */
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: ЦВЕТОВАЯ ПАЛИТРА === */
+        :root {
+            --bg-gradient-start: #0f0c29;
+            --bg-gradient-middle: #302b63;
+            --bg-gradient-end: #24243e;
+            --accent-pink: #ff6b9d;
+            --accent-dark-pink: #c44569;
+            --accent-purple: #9b59b6;
+            --accent-light-purple: #d291bc;
+            --text-light: #ffffff;
+            --text-muted: #b8a9c9;
+            --heart-red: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            /* === РЕДАКТИРУЙ ЗДЕСЬ: ФОН СТРАНИЦЫ === */
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-middle), var(--bg-gradient-end));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Анимация плавного движения градиента */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* ==========================================
+           ЭКРАН ЛОГИНА
+           ========================================== */
+        
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 100%;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        /* Эффект пульсации для контейнера */
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                            0 0 30px rgba(255, 107, 157, 0.2);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                            0 0 50px rgba(255, 107, 157, 0.5);
+            }
+        }
+        
+        .login-title {
+            font-family: 'Comfortaa', cursive;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--accent-pink);
+            animation: titlePulse 2s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+        }
+
+        /* Пульсация заголовка */
+        @keyframes titlePulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+            }
+            50% {
+                transform: scale(1.05);
+                text-shadow: 0 0 30px rgba(255, 107, 157, 0.9);
+            }
+        }
+        
+        .login-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: ПОЛЕ ВВОДА ПАРОЛЯ === */
+        #password-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--accent-purple);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #password-input:focus {
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+        
+        #password-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .login-btn {
+            margin-top: 20px;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-dark-pink));
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Comfortaa', cursive;
+        }
+
+        /* Движущийся градиент на кнопке */
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(255, 107, 157, 0.6),
+                        0 0 40px rgba(255, 107, 157, 0.4);
+        }
+        
+        #login-error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* ==========================================
+           ГЛАВНЫЙ ЭКРАН
+           ========================================== */
+        
+        #main-screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .main-title {
+            font-family: 'Comfortaa', cursive;
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 30px 0;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-light-purple));
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ==========================================
+           ВИДЖЕТ ЛЮБВИ
+           ========================================== */
+        
+        .love-widget {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: widgetPulse 4s ease-in-out infinite;
+        }
+
+        /* Эффект пульсации для виджета */
+        @keyframes widgetPulse {
+            0%, 100% {
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+                            0 0 30px rgba(155, 89, 182, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4),
+                            0 0 60px rgba(155, 89, 182, 0.5);
+                transform: scale(1.02);
+            }
+        }
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: РАМКА ДЛЯ ФОТО === */
+        .photo-frame {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            padding: 8px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-pink));
+            background-size: 200% 200%;
+            animation: photoFrameGlow 3s infinite, gradientRotate 6s linear infinite;
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.4);
+        }
+
+        @keyframes photoFrameGlow {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(255, 107, 157, 0.4),
+                            0 0 50px rgba(155, 89, 182, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 107, 157, 0.7),
+                            0 0 80px rgba(155, 89, 182, 0.5);
+            }
+        }
+
+        @keyframes gradientRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .photo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: ИЗОБРАЖЕНИЕ В РАМКЕ === */
+        .photo-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Плейсхолдер если нет фото */
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-muted);
+            font-size: 3rem;
+        }
+        
+        .love-label {
+            font-family: 'Comfortaa', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-pink);
+            margin: 15px 0;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            animation: labelGlow 2.5s ease-in-out infinite;
+        }
+
+        /* Эффект свечения текста */
+        @keyframes labelGlow {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255, 107, 157, 0.5),
+                             0 0 30px rgba(255, 107, 157, 0.3);
+            }
+            50% {
+                text-shadow: 0 0 30px rgba(255, 107, 157, 0.8),
+                             0 0 50px rgba(255, 107, 157, 0.5);
+            }
+        }
+        
+        /* ==========================================
+           ТАЙМЕР ОТНОШЕНИЙ
+           ========================================== */
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: ДАТА НАЧАЛА ОТНОШЕНИЙ === */
+        /* Формат: "YYYY-MM-DDTHH:MM:SS" */
+        /* Пример: "2026-05-26T00:00:00" = 26 мая 2026 */
+        
+        .timer-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .timer-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .timer-block {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            background-size: 200% 200%;
+            animation: timerPulse 2s ease-in-out infinite;
+            border-radius: 12px;
+            padding: 15px 12px;
+            min-width: 70px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        }
+
+        /* Пульсация блоков таймера */
+        @keyframes timerPulse {
+            0%, 100% {
+                background-position: 0% 50%;
+                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+            }
+            50% {
+                background-position: 100% 50%;
+                box-shadow: 0 6px 25px rgba(155, 89, 182, 0.5);
+            }
+        }
+        
+        .timer-value {
+            font-family: 'Comfortaa', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .timer-unit {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+        
+        .timer-separator {
+            font-size: 2rem;
+            color: var(--accent-pink);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        
+        /* ==========================================
+           КНОПКИ МЕНЮ
+           ========================================== */
+        
+        .menu-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .menu-btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-dark-pink));
+            background-size: 200% 200%;
+            animation: buttonShine 3s ease infinite;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Comfortaa', cursive;
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        /* Эффект свечения кнопок */
+        @keyframes buttonShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(155, 89, 182, 0.7),
+                        0 0 50px rgba(255, 107, 157, 0.4);
+        }
+        
+        /* ==========================================
+           ЭКРАНЫ ДАТ, ФОТО, ВИДЕО
+           ========================================== */
+        
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .screen-title {
+            font-family: 'Comfortaa', cursive;
+            font-size: 2rem;
+            color: var(--accent-pink);
+        }
+        
+        .back-btn {
+            margin: 20px auto;
+            display: block;
+            padding: 12px 30px;
+            border: 2px solid var(--accent-pink);
+            border-radius: 30px;
+            background: transparent;
+            color: var(--accent-pink);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: var(--accent-pink);
+            color: white;
+        }
+        
+        /* ==========================================
+           ЭКРАН ДАТ
+           ========================================== */
+        
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: СПИСОК ДАТ === */
+        /* Добавляй новые даты в формате:
+           { date: "ДД.ММ.ГГГГ", event: "Описание события" }, */
+        
+        .dates-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .date-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid var(--accent-pink);
+            transition: all 0.3s;
+        }
+        
+        .date-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+        
+        .date-icon {
+            font-size: 2rem;
+        }
+        
+        .date-info {
+            flex: 1;
+        }
+        
+        .date-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .date-event {
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        .date-emoji {
+            font-size: 1.5rem;
+        }
+        
+        /* ==========================================
+           ЭКРАН ФОТО - галерея 3 в ряд
+           ========================================== */
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .photo-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid var(--accent-pink);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        /* === РЕДАКТИРУЙ ЗДЕСЬ: ФОТОГРАФИИ === */
+        /* Замени src на путь к твоим фото */
+        .photo-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Раскрывающаяся подпись под фото */
+        .photo-caption {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .photo-caption.open {
+            padding: 15px;
+            max-height: 200px;
+        }
+
+        .caption-toggle {
+            background: rgba(255, 107, 157, 0.3);
+            border: none;
+            color: var(--text-light);
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .caption-toggle:hover {
+            background: rgba(255, 107, 157, 0.5);
+        }
+
+        /* Плейсхолдер для пустых слотов */
+        .photo-placeholder-grid {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 3rem;
+        }
+        
+        /* ==========================================
+           ЭКРАН ВИДЕО - УДАЛЕНО
+           ========================================== */
+        
+        /* ==========================================
+           ПЛАВАЮЩИЕ СЕРДЦА (ДЕКОР) - только на главном экране
+           ========================================== */
+
+        #main-screen .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 20px;
+            animation: float-up 10s infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* ==========================================
+           АДАПТИВНОСТЬ
+           ========================================== */
+
+        @media (max-width: 600px) {
+            .main-title { font-size: 1.8rem; }
+            .love-label { font-size: 1.4rem; }
+            .timer-value { font-size: 1.4rem; }
+            .timer-block { min-width: 55px; padding: 10px 8px; }
+            .menu-btn { padding: 15px 25px; font-size: 1rem; }
+            .photo-frame { width: 180px; height: 180px; }
+            .photos-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <!-- ==========================================
+         ЭКРАН ЛОГИНА
+         ========================================== -->
+    <div id="login-screen">
+        <div class="login-container">
+            <h1 class="login-title"></h1>
+            <p class="login-subtitle">Введите пароль, чтобы продолжить</p>
+            
+            <!-- === РЕДАКТИРУЙ ЗДЕСЬ: ПАРОЛЬ === -->
+            <!-- Измени value="260526" на нужный пароль -->
+            <input 
+                type="password" 
+                id="password-input" 
+                placeholder="Сюда сюда"
+                value=""
+            >
+            
+            <button class="login-btn" onclick="checkPassword()">Вход</button>
+            
+            <p id="login-error">😢 Неверный пароль, попробуй ещё раз</p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ГЛАВНЫЙ ЭКРАН
+         ========================================== -->
+    <div id="main-screen">
+        <!-- Плавающие сердечки только на главном экране -->
+        <div class="floating-hearts">
+            <div class="heart" style="left: 10%; animation-delay: 0s;">💕</div>
+            <div class="heart" style="left: 20%; animation-delay: 2s;">💗</div>
+            <div class="heart" style="left: 30%; animation-delay: 4s;">💖</div>
+            <div class="heart" style="left: 50%; animation-delay: 1s;">💕</div>
+            <div class="heart" style="left: 70%; animation-delay: 3s;">💗</div>
+            <div class="heart" style="left: 85%; animation-delay: 5s;">💖</div>
+        </div>
+
+        <h1 class="main-title">бурмалдим</h1>
+        
+        <!-- Виджет любви -->
+        <div class="love-widget">
+            <div class="photo-frame">
+                <div class="photo-inner">
+                    <!-- === РЕДАКТИРУЙ ЗДЕСЬ: ФОТО В РАМКЕ === -->
+                    <!-- Убери div.photo-placeholder и раскомментируй img -->
+                    <img src="ddss.jpg">
+                    <!-- <img src="your-photo.jpg" alt="Наше фото"> -->
+                </div>
+            </div>
+            
+            <h2 class="love-label"></h2>
+            
+            <!-- Таймер -->
+            <div class="timer-container">
+                <p class="timer-label">вместе мы:</p>
+                <div class="timer" id="timer">
+                    <div class="timer-block">
+                        <div class="timer-value" id="days">00</div>
+                        <div class="timer-unit">Дней</div>
+                    </div>
+                    <span class="timer-separator">:</span>
+                    <div class="timer-block">
+                        <div class="timer-value" id="hours">00</div>
+                        <div class="timer-unit">Часов</div>
+                    </div>
+                    <span class="timer-separator">:</span>
+                    <div class="timer-block">
+                        <div class="timer-value" id="minutes">00</div>
+                        <div class="timer-unit">Минут</div>
+                    </div>
+                    <span class="timer-separator">:</span>
+                    <div class="timer-block">
+                        <div class="timer-value" id="seconds">00</div>
+                        <div class="timer-unit">Секунд</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Кнопки меню -->
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="showScreen('dates-screen')">📅 Даты</button>
+            <button class="menu-btn" onclick="showScreen('photos-screen')">📷 Фото</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ЭКРАН ДАТ
+         ========================================== -->
+    <div id="dates-screen" class="screen">
+        <div class="screen-header">
+            <h2 class="screen-title">Пакостим</h2>
+        </div>
+        
+        <div class="dates-container">
+            <!-- === РЕДАКТИРУЙ ЗДЕСЬ: ДОБАВЛЯЙ НОВЫЕ ДАТЫ === -->
+            <!-- Копируй блок div.date-card и меняй текст -->
+            
+            <div class="date-card">
+                <div class="date-icon">👀</div>
+                <div class="date-info">
+                    <div class="date-text">26.05.2026</div>
+                    <div class="date-event">Познакомились</div>
+                </div>
+                <div class="date-emoji">✨</div>
+            </div>
+            
+            <div class="date-card">
+                <div class="date-icon">💕</div>
+                <div class="date-info">
+                    <div class="date-text">29.05.2026</div>
+                    <div class="date-event">Вступили в отношения</div>
+                </div>
+                <div class="date-emoji">👫</div>
+            </div>
+            
+            <div class="date-card">
+                <div class="date-icon">🌅</div>
+                <div class="date-info">
+                    <div class="date-text">хх.хх.хххх</div>
+                    <div class="date-event">Еще все впереди</div>
+                </div>
+                <div class="date-emoji">♾️ </div>
+            </div>
+            
+            <!-- Добавь свои даты после этой строки -->
+            
+        </div>
+        
+        <button class="back-btn" onclick="showScreen('main-screen')">← Назад</button>
+    </div>
+
+    <!-- ==========================================
+         ЭКРАН ФОТО
+         ========================================== -->
+    <div id="photos-screen" class="screen">
+        <div class="screen-header">
+            <h2 class="screen-title">фоточке</h2>
+        </div>
+
+        <div class="photos-grid">
+            <!-- === КАК ДОБАВЛЯТЬ ФОТО === -->
+            <!-- 1. Скопируй блок <div class="photo-item">...</div>
+                 2. Замени src="ddss.jpg" на путь к своему фото
+                 3. Напиши подпись в <div class="photo-caption">
+                 Фото автоматически располагаются по 3 в ряд -->
+
+            <div class="photo-item">
+                <img src="ddss.jpg" alt="Фото 1">
+                <button class="caption-toggle" onclick="toggleCaption(this)">📝 Показать подпись</button>
+                <div class="photo-caption">
+                    02.06.2026
+                     милостим
+                </div>
+            </div>
+
+            <div class="photo-item">
+                <img src="dad.jpg" alt="Фото 2">
+                <button class="caption-toggle" onclick="toggleCaption(this)">📝 Показать подпись</button>
+                <div class="photo-caption">
+                    02.06.2026
+                     факостим
+                </div>
+            </div>
+
+            <div class="photo-item">
+                <img src="as.jpg" alt="Фото 3">
+                <button class="caption-toggle" onclick="toggleCaption(this)">📝 Показать подпись</button>
+                <div class="photo-caption">
+                    30.05.2026
+                     первая фоточка
+                </div>
+            </div>
+
+             <div class="photo-item">
+                <img src="asp.jpg" alt="Фото 4">
+                <button class="caption-toggle" onclick="toggleCaption(this)">📝 Показать подпись</button>
+                <div class="photo-caption">
+                    2.06.2026
+                     плакость
+                </div>
+            </div>
+
+            <!-- ДОБАВЬ НОВЫЕ ФОТО НИЖЕ, копируя этот блок: -->
+            <!--
+            <div class="photo-item">
+                <img src="ИМЯ_ФАЙЛА.jpg" alt="Описание">
+                <button class="caption-toggle" onclick="toggleCaption(this)">📝 Показать подпись</button>
+                <div class="photo-caption">
+                    Напиши подпись здесь
+                </div>
+            </div>
+            -->
+
+        </div>
+
+        <button class="back-btn" onclick="showScreen('main-screen')">← Назад</button>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <script>
+        // === РЕДАКТИРУЙ ЗДЕСЬ: ПАРОЛЬ ===
+        const CORRECT_PASSWORD = "260526";
+
+        // === РЕДАКТИРУЙ ЗДЕСЬ: ДАТА НАЧАЛА ОТНОШЕНИЙ ===
+        // Формат: new Date("YYYY-MM-DDTHH:MM:SS")
+        const START_DATE = new Date("2026-05-29T14:00:00");
+
+        // Проверка пароля
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const error = document.getElementById('login-error');
+
+            if (input.value === CORRECT_PASSWORD) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-screen').style.display = 'block';
+                startTimer();
+            } else {
+                error.style.display = 'block';
+                input.style.borderColor = '#ff6b6b';
+
+                // Анимация ошибки
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        }
+
+        // Enter на клавиатуре
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // Переключение экранов
+        function showScreen(screenId) {
+            // Скрываем все экраны
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('dates-screen').style.display = 'none';
+            document.getElementById('photos-screen').style.display = 'none';
+
+            // Показываем нужный
+            document.getElementById(screenId).style.display = 'block';
+        }
+
+        // Таймер
+        let timerInterval;
+
+        function startTimer() {
+            updateTimer();
+            // Обновляем каждую секунду
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - START_DATE;
+
+            if (diff < 0) return; // Если дата в будущем
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Функция для открытия/закрытия подписей под фото
+        function toggleCaption(button) {
+            const caption = button.nextElementSibling;
+            caption.classList.toggle('open');
+
+            if (caption.classList.contains('open')) {
+                button.textContent = '📝 Скрыть подпись';
+            } else {
+                button.textContent = '📝 Показать подпись';
+            }
+        }
+
+        // Добавляем стиль для анимации тряски
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-10px); }
+                40%, 80% { transform: translateX(10px); }
+            }
+            .shake { animation: shake 0.5s; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
